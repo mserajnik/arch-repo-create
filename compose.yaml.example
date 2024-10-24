@@ -1,0 +1,21 @@
+services:
+  build:
+    image: ghcr.io/mserajnik/arch-repo-create
+    # If you are using a Linux host and your user's UID and GID are not 1000,
+    # change these values to reflect your user's UID and GID. This will cause
+    # the user in the container to use the same UID and GID and prevent
+    # permission issues on the bind mounts.
+    # If you are on Windows or macOS, you can ignore this.
+    user: 1000:1000
+    restart: no
+    volumes:
+      - ./packages:/packages:ro
+      - ./repository:/repository
+    environment:
+      - REPOSITORY_NAME=arch-repo
+      # Optionally provide a base64-encoded GPG private key to sign the
+      # packages and the repository. You can use the following command for
+      # this:
+      # `gpg --export-secret-key <key ID> | base64`
+      - GPG_PRIVATE_KEY=
+      - GPG_PASSPHRASE=
