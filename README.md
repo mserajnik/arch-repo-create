@@ -3,12 +3,11 @@
 > A Docker image for creating Arch Linux package repositories
 
 This Docker image provides an easy way to create and manage Arch Linux package
-package repositories. It is based on the
-[official Arch Linux image][arch-linux-image] and builds packages using
-[`makepkg`][makepkg] before adding them to a repository via
-[`repo-add`][repo-add]. Dependencies are installed with [pikaur][pikaur] and
-can therefore also come from the AUR. Both the packages and the repository can
-optionally be signed by providing a GPG key.
+repositories. It is based on the [official Arch Linux image][arch-linux-image]
+and builds packages using [`makepkg`][makepkg] before adding them to a
+repository via [`repo-add`][repo-add]. Dependencies are installed with
+[pikaur][pikaur] and can therefore also come from the AUR. Both the packages
+and the repository can optionally be signed by providing a GPG key.
 
 The primary use case are CI/CD platforms that don't have an Arch Linux
 environment available by default. See [my personal repository][repo-example]
@@ -56,10 +55,10 @@ docker compose run --rm build
 ```
 
 Do not use `docker compose up`; the container is not supposed to keep running
-after the one-off command has finished executing. Here, Docker Compose is used
-mainly to have an easy way to start the container, considering how long the
+after the one-off command has finished executing. Docker Compose is used mainly
+to have an easy way to configure the container, considering how long the
 base64 GPG key is and how cumbersome it would be to pass it via the command
-line.
+line when using `docker run` instead.
 
 After the container has exited, the repository files will be inside the
 [`./repository`](repository) directory. Simply deploy these files to a web
