@@ -15,27 +15,23 @@ for an example of how this image can be utilized in a GitHub Actions workflow.
 
 ## Usage
 
-To get started, clone the Git repository and create a copy of the Docker
-Compose example configuration:
+To get started, clone the Git repository and create a .env file with configuration:
 
 ```sh
 git clone https://github.com/mserajnik/arch-repo-create.git
 cd arch-repo-create
-cp ./compose.yaml.example ./compose.yaml
 ```
 
-Adjust the `REPOSITORY_NAME` environment variable in your `compose.yaml` as you
-like. Optionally, you can also pass a GPG private key to the container which
-will cause the packages and the repository to be signed. To do this, you need
-to base64-encode the key. E.g., like this:
+Create environment file
 
 ```sh
-gpg --export-secret-key <key ID> | base64
+cp .env.example .env`
 ```
+> **Note**: The repository includes `.env.example` as a template with default 
+  settings and documentation. Your actual `.env` file is excluded from version
+  control (via `.gitignore`) to prevent accidentally committing sensitive
+  information like keys and passwords.
 
-Then, copy the output and paste it as value for the `GPG_PRIVATE_KEY`
-environment variable. If your GPG key is protected by a passphrase, you also
-need to set `GPG_PASSPHRASE` accordingly.
 
 Next, copy the packages you want to build and add to the repository to the
 [`./packages`](packages) directory. Each package must be in its own
@@ -51,7 +47,10 @@ tree ./packages
 Finally, run the container:
 
 ```sh
-docker compose run --rm build
+docker compose run --rm buildpkgs
+
+# if you have make installed you can also use
+make
 ```
 
 Do not use `docker compose up`; the container is not supposed to keep running
@@ -80,11 +79,40 @@ container again:
 
 ```sh
 rm -rf ./repository/*
-docker compose run --rm build
+docker compose run --rm buildpkgs
 ```
 
 Otherwise, the existing repository will be updated instead and old package
 versions will be kept.
+
+### Use a local image and or develop
+
+## 1. Use local override
+
+Edit your `.env` file to say `COMPOSE_FILE=compose.yaml:options/local.yaml`
+
+## 2. Build local image
+
+If the local image is missing it will be built the first
+time you run `docker compose run --rm buildpkgs`.
+
+If you make changes to any of the image files, located in `./image` and you
+need to rebuild the image you can do it in several ways.
+
+```sh
+# at the same time you run
+docker compose run --rm --build buildpkgs
+
+# using the compose build command
+docker compose build
+
+# or the make task called build
+make build
+```
+
+
+
+
 
 ## Maintainer
 
