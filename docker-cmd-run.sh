@@ -29,7 +29,7 @@ install_aur_deps() {
 
   echo "Checking for missing dependencies for $package_name..."
 
-  missing_deps=$(makepkg --printsrcinfo | grep -oP '(?<=depends = )\S+' | xargs -I{} bash -c 'pacman -T {} > /dev/null || echo {}')
+  missing_deps=$(makepkg --printsrcinfo | grep -oP '(?<=(\s|make)depends = )\S+' | xargs -I{} bash -c 'pacman -T {} > /dev/null || echo {}')
 
   if [ -n "$missing_deps" ]; then
     echo "Missing dependencies for $package_name detected: $missing_deps"
