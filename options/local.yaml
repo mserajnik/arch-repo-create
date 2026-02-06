@@ -1,0 +1,10 @@
+# This file overrides the image and build configuration in the default 
+# compose.yaml to use the locally built image instead of the one from the
+# registry. Add to COMPOSE_FILE environment variable to use this file in 
+# addition to compose.yaml.
+services:
+  buildpkgs:
+    image: arch-repo-create:latest
+    build:
+      context: ./image
+      dockerfile: Dockerfile

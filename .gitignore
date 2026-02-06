@@ -1,4 +1,4 @@
 /packages/**
 /repository/**
-/compose.yaml
 !/**/.gitkeep
+/.env
