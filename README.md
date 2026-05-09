@@ -56,9 +56,9 @@ docker compose run --rm build
 
 Do not use `docker compose up`; the container is not supposed to keep running
 after the one-off command has finished executing. Docker Compose is used mainly
-to have an easy way to configure the container, considering how long the
-base64 GPG key is and how cumbersome it would be to pass it via the command
-line when using `docker run` instead.
+to have an easy way to configure the container, considering how long the base64
+GPG key is and how cumbersome it would be to pass it via the command line when
+using `docker run` instead.
 
 After the container has exited, the repository files will be inside the
 [`./repository`](repository) directory. Simply deploy these files to a web
@@ -100,14 +100,13 @@ You are welcome to help out!
 
 [AGPL-3.0-or-later](LICENSE) © Michael Serajnik
 
-[arch-linux-image]: https://hub.docker.com/_/archlinux/
-[makepkg]: https://man.archlinux.org/man/makepkg.8.en
-[pikaur]: https://github.com/actionless/pikaur
-[repo-add]: https://man.archlinux.org/man/repo-add.8.en
-[repo-example]: https://github.com/mserajnik/pkg.mser.at
-
 [actions-status]: https://github.com/mserajnik/arch-repo-create/actions
 [actions-status-badge]: https://github.com/mserajnik/arch-repo-create/actions/workflows/build-docker-image.yaml/badge.svg
+[arch-linux-image]: https://hub.docker.com/_/archlinux/
 [issues]: https://github.com/mserajnik/arch-repo-create/issues
 [maintainer]: https://github.com/mserajnik
+[makepkg]: https://man.archlinux.org/man/makepkg.8.en
+[pikaur]: https://github.com/actionless/pikaur
 [pull-requests]: https://github.com/mserajnik/arch-repo-create/pulls
+[repo-add]: https://man.archlinux.org/man/repo-add.8.en
+[repo-example]: https://github.com/mserajnik/pkg.mser.at

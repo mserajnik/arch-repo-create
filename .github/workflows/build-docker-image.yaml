@@ -1,21 +1,25 @@
 name: Build and push Docker image
 
 on:
-  # Rebuild image daily
+  # Build the image daily.
   schedule:
     - cron: 0 0 * * *
   push:
     branches:
       - master
     paths:
-      - Dockerfile
+      - .dockerignore
+      - .github/workflows/build-docker-image.yaml
       - docker-cmd-run.sh
+      - Dockerfile
   pull_request:
     branches:
       - master
     paths:
-      - Dockerfile
+      - .dockerignore
+      - .github/workflows/build-docker-image.yaml
       - docker-cmd-run.sh
+      - Dockerfile
   workflow_dispatch:
 
 env:
@@ -25,7 +29,7 @@ env:
 jobs:
   build-and-push-image:
     name: Build and push image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
@@ -47,8 +51,18 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Set latest tag for master branch
+            # Set the `latest` tag for the master branch.
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
+          labels: |
+            org.opencontainers.image.authors=${{ vars.OCI_ANNOTATION_AUTHORS || github.repository_owner }}
+            org.opencontainers.image.url=https://github.com/${{ github.repository }}
+            org.opencontainers.image.documentation=https://github.com/${{ github.repository }}/blob/master/README.md
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.vendor=${{ vars.OCI_ANNOTATION_VENDOR || github.repository_owner }}
+            org.opencontainers.image.licenses=AGPL-3.0-or-later
+            org.opencontainers.image.title=arch-repo-create
+            org.opencontainers.image.description=Builds Arch Linux packages from PKGBUILDs and assembles them into a pacman repository.
+            org.opencontainers.image.base.name=archlinux:base-devel
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v7
