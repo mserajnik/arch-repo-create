@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Container command wrapper that drops privileges via `fixuid`, builds the Arch
+# packages mounted under `/packages` (resolving AUR dependencies with
+# `pikaur`), and assembles them into a repository under `/repository`.
+
 set -euo pipefail
 
 eval "$(fixuid -q)"
