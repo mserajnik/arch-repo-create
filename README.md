@@ -96,17 +96,25 @@ You are welcome to help out!
 
 [Open an issue][issues] or [make a pull request][pull-requests].
 
-## License
+## Licenses
 
-[AGPL-3.0-or-later](LICENSE) © Michael Serajnik
+- [`AGPL-3.0-or-later`][license-agpl-3.0-or-later] (Code)
+- [`CC-BY-SA-4.0`][license-cc-by-sa-4.0] (Documentation)
+- [`CC0-1.0`][license-cc0-1.0] (Configurations)
+
+This project follows the [REUSE specification][reuse-spec].
 
 [actions-status]: https://github.com/mserajnik/arch-repo-create/actions
 [actions-status-badge]: https://github.com/mserajnik/arch-repo-create/actions/workflows/build-docker-image.yaml/badge.svg
 [arch-linux-image]: https://hub.docker.com/_/archlinux/
 [issues]: https://github.com/mserajnik/arch-repo-create/issues
+[license-agpl-3.0-or-later]: LICENSES/AGPL-3.0-or-later.txt
+[license-cc-by-sa-4.0]: LICENSES/CC-BY-SA-4.0.txt
+[license-cc0-1.0]: LICENSES/CC0-1.0.txt
 [maintainer]: https://github.com/mserajnik
 [makepkg]: https://man.archlinux.org/man/makepkg.8.en
 [pikaur]: https://github.com/actionless/pikaur
 [pull-requests]: https://github.com/mserajnik/arch-repo-create/pulls
 [repo-add]: https://man.archlinux.org/man/repo-add.8.en
 [repo-example]: https://github.com/mserajnik/pkg.mser.at
+[reuse-spec]: https://reuse.software/spec/
