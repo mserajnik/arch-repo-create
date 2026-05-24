@@ -1,4 +1,7 @@
-# arch-repo-create [![GitHub Actions status][actions-status-badge]][actions-status]
+# arch-repo-create
+
+[![Lint status][badge-lint-status]][badge-lint-status-url]
+[![Build status][badge-build-status]][badge-build-status-url]
 
 > A Docker image for creating Arch Linux package repositories
 
@@ -100,13 +103,15 @@ You are welcome to help out!
 
 - [`AGPL-3.0-or-later`][license-agpl-3.0-or-later] (Code)
 - [`CC-BY-SA-4.0`][license-cc-by-sa-4.0] (Documentation)
-- [`CC0-1.0`][license-cc0-1.0] (Configurations)
+- [`CC0-1.0`][license-cc0-1.0] (Configuration files)
 
 This project follows the [REUSE specification][reuse-spec].
 
-[actions-status]: https://github.com/mserajnik/arch-repo-create/actions
-[actions-status-badge]: https://github.com/mserajnik/arch-repo-create/actions/workflows/build-docker-image.yaml/badge.svg
 [arch-linux-image]: https://hub.docker.com/_/archlinux/
+[badge-build-status]: https://github.com/mserajnik/arch-repo-create/actions/workflows/build-docker-image.yaml/badge.svg
+[badge-build-status-url]: https://github.com/mserajnik/arch-repo-create/actions/workflows/build-docker-image.yaml
+[badge-lint-status]: https://github.com/mserajnik/arch-repo-create/actions/workflows/lint.yaml/badge.svg
+[badge-lint-status-url]: https://github.com/mserajnik/arch-repo-create/actions/workflows/lint.yaml
 [issues]: https://github.com/mserajnik/arch-repo-create/issues
 [license-agpl-3.0-or-later]: LICENSES/AGPL-3.0-or-later.txt
 [license-cc-by-sa-4.0]: LICENSES/CC-BY-SA-4.0.txt
