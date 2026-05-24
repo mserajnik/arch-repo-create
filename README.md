@@ -30,7 +30,7 @@ will cause the packages and the repository to be signed. To do this, you need
 to base64-encode the key. E.g., like this:
 
 ```sh
-gpg --export-secret-key <key ID> | base64
+gpg --export-secret-key <key-id> | base64
 ```
 
 Then, copy the output and paste it as value for the `GPG_PRIVATE_KEY`
