@@ -53,8 +53,8 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # Set the `latest` tag for the master branch.
           tags: |
-            # Set the `latest` tag for the master branch.
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
           labels: |
             org.opencontainers.image.authors=${{ vars.OCI_ANNOTATION_AUTHORS || github.repository_owner }}

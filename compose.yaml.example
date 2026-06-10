@@ -16,6 +16,6 @@ services:
       # Optionally provide a base64-encoded GPG private key to sign the
       # packages and the repository. You can use the following command for
       # this:
-      # `gpg --export-secret-key <key ID> | base64`
+      # `gpg --export-secret-key <key-id> | base64`
       - GPG_PRIVATE_KEY=
       - GPG_PASSPHRASE=
