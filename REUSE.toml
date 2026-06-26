@@ -13,6 +13,7 @@ path = [
   ".editorconfig",
   ".gitattributes",
   ".gitignore",
+  ".hadolint.yaml",
   ".shellcheckrc",
   "compose.yaml.example",
 ]

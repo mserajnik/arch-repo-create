@@ -1,0 +1,5 @@
+ignored:
+  # These steps `cd` between directories within a single combined `RUN`. Using
+  # `WORKDIR` would fragment that `RUN` into separate layers and change the
+  # working directory for the rest of the stage.
+  - DL3003

@@ -18,23 +18,25 @@ RUN \
   existing_group=$(getent group "$BUILDER_GROUP_ID") || true && \
   existing_user=$(getent passwd "$BUILDER_USER_ID") || true && \
   if [ -n "$existing_group" ]; then \
-    old_groupname=$(echo "$existing_group" | cut -d: -f1) && \
+    old_groupname=${existing_group%%:*} && \
     groupmod -n "$BUILDER_GROUP_NAME" "$old_groupname"; \
   else \
     groupadd -g "$BUILDER_GROUP_ID" "$BUILDER_GROUP_NAME"; \
   fi && \
   if [ -n "$existing_user" ]; then \
-    old_username=$(echo "$existing_user" | cut -d: -f1) && \
+    old_username=${existing_user%%:*} && \
     usermod -l "$BUILDER_USER_NAME" -d "/home/$BUILDER_USER_NAME" "$old_username" && \
     mv "/home/$old_username" "/home/$BUILDER_USER_NAME"; \
   else \
-    useradd -u "$BUILDER_USER_ID" -g "$BUILDER_GROUP_NAME" -d "/home/$BUILDER_USER_NAME" -s /bin/sh -m "$BUILDER_USER_NAME"; \
+    useradd -l -u "$BUILDER_USER_ID" -g "$BUILDER_GROUP_NAME" -d "/home/$BUILDER_USER_NAME" -s /bin/sh -m "$BUILDER_USER_NAME"; \
   fi && \
   echo "$BUILDER_USER_NAME ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/$BUILDER_USER_NAME" && \
   mkdir -p /packages /repository && \
   chown -R "$BUILDER_USER_NAME:$BUILDER_GROUP_NAME" /packages /repository && \
   # See https://github.com/boxboat/fixuid
-  curl -SsL "https://github.com/boxboat/fixuid/releases/download/v0.6.0/fixuid-0.6.0-linux-amd64.tar.gz" | tar -C /usr/local/bin -xzf - && \
+  curl -SsL "https://github.com/boxboat/fixuid/releases/download/v0.6.0/fixuid-0.6.0-linux-amd64.tar.gz" -o /tmp/fixuid.tar.gz && \
+  tar -C /usr/local/bin -xzf /tmp/fixuid.tar.gz && \
+  rm /tmp/fixuid.tar.gz && \
   chown root:root /usr/local/bin/fixuid && \
   chmod 4755 /usr/local/bin/fixuid && \
   mkdir -p /etc/fixuid && \
