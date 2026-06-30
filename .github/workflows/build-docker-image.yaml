@@ -13,16 +13,16 @@ on:
     paths:
       - .dockerignore
       - .github/workflows/build-docker-image.yaml
-      - docker-cmd-run.sh
       - Dockerfile
+      - docker-cmd-run.sh
   pull_request:
     branches:
       - master
     paths:
       - .dockerignore
       - .github/workflows/build-docker-image.yaml
-      - docker-cmd-run.sh
       - Dockerfile
+      - docker-cmd-run.sh
   workflow_dispatch:
 
 env:

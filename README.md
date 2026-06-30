@@ -41,8 +41,8 @@ environment variable. If your GPG key is protected by a passphrase, you also
 need to set `GPG_PASSPHRASE` accordingly.
 
 Next, copy the packages you want to build and add to the repository to the
-[`./packages`](packages) directory. Each package must be in its own
-subdirectory and contain (at least) a `PKGBUILD` file, like this:
+[`packages/`](packages) directory. Each package must be in its own subdirectory
+and contain (at least) a `PKGBUILD` file, like this:
 
 ```sh
 tree ./packages
@@ -64,7 +64,7 @@ GPG key is and how cumbersome it would be to pass it via the command line when
 using `docker run` instead.
 
 After the container has exited, the repository files will be inside the
-[`./repository`](repository) directory. Simply deploy these files to a web
+[`repository/`](repository) directory. Simply deploy these files to a web
 server to host your repository and add it to your Arch Linux system by editing
 your `/etc/pacman.conf`. E.g., for a signed repository with the default name
 `arch-repo`:
@@ -78,7 +78,7 @@ Server = https://your-domain.com/
 ### Recreating the repository
 
 If you want to cleanly recreate the repository from scratch, delete all the
-files from the [`./repository`](repository) directory before running the
+files from the [`repository/`](repository) directory before running the
 container again:
 
 ```sh
