@@ -16,6 +16,7 @@ path = [
   ".hadolint.yaml",
   ".shellcheckrc",
   "compose.yaml.example",
+  "examples/build-and-deploy.yaml",
 ]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2024-2026 Michael Serajnik <https://github.com/mserajnik>"

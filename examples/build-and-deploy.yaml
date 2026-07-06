@@ -1,0 +1,146 @@
+# Example GitHub Actions workflow; builds the packages in `packages/` using the
+# arch-repo-create Docker image and deploys the resulting package repository to
+# GitHub Pages under a custom domain. VCS packages are rebuilt daily; on
+# Mondays and on any run not triggered by the schedule, the repository is
+# recreated from scratch.
+#
+# To use it, copy this file to `.github/workflows/` in the repository
+# containing your packages. To sign the packages and the repository, configure
+# the secrets `GPG_PRIVATE_KEY` (base64-encoded) and, if the key is protected
+# by a passphrase, `GPG_PASSPHRASE`.
+
+name: Build and deploy
+
+on:
+  # Build daily, offset by one hour to be able to use the latest
+  # arch-repo-create Docker image (which gets built daily at 00:00 UTC).
+  schedule:
+    - cron: 0 1 * * *
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/build-and-deploy.yaml
+      - README.md
+      - packages/**
+  pull_request:
+    branches:
+      - master
+    paths:
+      - .github/workflows/build-and-deploy.yaml
+      - README.md
+      - packages/**
+  workflow_dispatch:
+
+# The GitHub repository is assumed to be named after the domain the package
+# repository is served from (e.g., `pkg.example.com`); the name is used as the
+# repository name, as the host to download existing repository files from, and
+# as the content of the `CNAME` file.
+env:
+  REPOSITORY_NAME: ${{ github.event.repository.name }}
+
+jobs:
+  build:
+    name: Build packages and create repository
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Create repository directory
+        run: mkdir -p ./repository
+
+      # Recreate the repository from scratch on every run that was not
+      # triggered by the schedule; for scheduled runs, only recreate it on
+      # Mondays.
+      - name: Check if repository should be recreated
+        id: check-recreate
+        run: |
+          if [[ "${{ github.event_name }}" != "schedule" ]]; then
+            echo "result=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$(date +%u)" -eq 1 ]]; then
+            echo "result=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "result=false" >> "$GITHUB_OUTPUT"
+
+      # When not recreating the repository from scratch, download the existing
+      # repository files so they can be reused.
+      - name: Download existing repository
+        if: steps.check-recreate.outputs.result == 'false'
+        run: |
+          curl -o repository_files.txt https://${{ env.REPOSITORY_NAME }}/repository_files.txt
+
+          while read -r file; do
+            curl -o ./repository/"$file" https://${{ env.REPOSITORY_NAME }}/"$file"
+          done < repository_files.txt
+
+      # When not recreating the repository from scratch, remove all packages
+      # that are not VCS packages since they should not be rebuilt daily.
+      - name: Restrict build to VCS packages
+        if: steps.check-recreate.outputs.result == 'false'
+        run: |
+          find ./packages -mindepth 1 -maxdepth 1 -type d ! -name '*-git' ! -name '*-svn' ! -name '*-hg' ! -name '*-bzr' ! -name '*-cvs' -exec rm -rf {} +
+
+      - name: Build packages and create repository
+        run: |
+          {
+            echo REPOSITORY_NAME="${{ env.REPOSITORY_NAME }}"
+            echo GPG_PRIVATE_KEY="${{ secrets.GPG_PRIVATE_KEY }}"
+            echo GPG_PASSPHRASE="${{ secrets.GPG_PASSPHRASE }}"
+          } > ./docker-env
+          docker run \
+            -v ${{ github.workspace }}/packages:/packages:ro \
+            -v ${{ github.workspace }}/repository:/repository \
+            --env-file ./docker-env \
+            --user "$(id -u):$(id -g)" \
+            ghcr.io/mserajnik/arch-repo-create
+
+      # Create a list of the files in the repository so subsequent runs that
+      # don't recreate the repository from scratch can download and reuse them.
+      - name: Create list of files in repository
+        run: |
+          cd ./repository
+          find . -maxdepth 1 -xtype f ! -name 'repository_files.txt' -exec basename {} \; > repository_files.txt
+
+      - name: Generate index.html file
+        uses: jaywcjlove/markdown-to-html-cli@v5.0.4
+        with:
+          source: README.md
+          output: repository/index.html
+          title: ${{ env.REPOSITORY_NAME }}
+          description: An Arch Linux package repository
+          github-corners: https://github.com/${{ github.repository }}
+
+      - name: Generate CNAME file
+        run: |
+          cd ./repository
+          echo "${{ env.REPOSITORY_NAME }}" > CNAME
+
+      - name: Upload package repository as artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: repository/
+
+  deploy:
+    name: Deploy repository
+    if: ${{ github.event_name != 'pull_request' }}
+    runs-on: ubuntu-24.04
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

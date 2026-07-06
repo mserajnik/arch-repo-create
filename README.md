@@ -13,8 +13,9 @@ repository via [`repo-add`][repo-add]. Dependencies are installed with
 and the repository can optionally be signed by providing a GPG key.
 
 The primary use case are CI/CD platforms that don't have an Arch Linux
-environment available by default. See [my personal repository][repo-example]
-for an example of how this image can be utilized in a GitHub Actions workflow.
+environment available by default. See the
+[example GitHub Actions workflow][workflow-example] for how this image can be
+utilized to build packages and deploy the resulting repository to GitHub Pages.
 
 ## Usage
 
@@ -121,5 +122,5 @@ This project follows the [REUSE specification][reuse-spec].
 [pikaur]: https://github.com/actionless/pikaur
 [pull-requests]: https://github.com/mserajnik/arch-repo-create/pulls
 [repo-add]: https://man.archlinux.org/man/repo-add.8.en
-[repo-example]: https://github.com/mserajnik/pkg.mser.at
 [reuse-spec]: https://reuse.software/spec/
+[workflow-example]: examples/build-and-deploy.yaml
