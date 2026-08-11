@@ -9,7 +9,9 @@
 
 set -euo pipefail
 
-eval "$(fixuid -q)"
+# Capture the `fixuid -q` exit status first since `eval` discards it.
+fixuid_output="$(fixuid -q)"
+eval "$fixuid_output"
 
 makepkg_cmd="makepkg -fsc --needed --noconfirm"
 repo_add_cmd="repo-add"
@@ -101,7 +103,11 @@ for dir in "$temp_dir"/*/; do
   fi
 done
 
-mapfile -t packages < <(find /repository -name '*.pkg.tar.zst')
+# Collect the paths first: `mapfile` reports only its own status, so a `find`
+# failure would silently read as "no packages".
+packages_raw="$(find /repository -name '*.pkg.tar.zst')"
+
+mapfile -t packages < <(printf '%s' "$packages_raw")
 
 if [ "${#packages[@]}" -eq 0 ]; then
   echo
