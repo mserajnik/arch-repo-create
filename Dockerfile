@@ -43,6 +43,8 @@ RUN \
   printf 'user: %s\ngroup: %s\n' "$BUILDER_USER_NAME" "$BUILDER_GROUP_NAME" > /etc/fixuid/config.yml
 
 COPY --chmod=755 ./docker-cmd-run.sh /usr/local/bin/run
+# Arch Linux keeps package license information under `/usr/share/licenses`.
+COPY ./docker-notice.txt /usr/share/licenses/arch-repo-create/NOTICE
 
 USER $BUILDER_USER_NAME:$BUILDER_GROUP_NAME
 
